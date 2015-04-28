@@ -1,0 +1,185 @@
+// mixins
+@mixin animation($animation) {
+  -o-animation: $animation;
+  -moz-animation: $animation;
+  -webkit-animation: $animation;
+  animation: $animation;
+}
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} { @content; }
+  @-moz-keyframes #{$name}    { @content; }
+  @-ms-keyframes #{$name}     { @content; }
+  @keyframes #{$name}         { @content; } 
+}
+
+/* vars */
+$default-input-color: #999 !default;
+$focused-input-border-color: #66afe9 !default;
+$screen-sm-min: 768px  !default;
+$screen-md-min: 992px  !default;
+$screen-lg-min: 1200px !default;
+$grid-gutter-width: 30px !default;
+$grid-gutter: $grid-gutter-width / 2 !default;
+$input-horizontal-padding: 12px !default;
+$alert-lg: 900px !default;
+$alert-md: 600px !default;
+$alert-sm: 300px !default;
+
+body { padding: 30px; }
+
+
+.has-effect {
+  overflow: hidden;
+  position: relative; 
+  user-select: none;
+  &.list-group-item {
+    .ink {
+      &.animate {
+        @include animation(ripple .8s linear);
+      }
+    } 
+  }
+  &.active  {
+    .ink {
+      background: rgba(255,255,255,.3);
+    }
+  }
+  &.btn {
+  @include single-transition(all, .3s, ease);
+  &:focus,
+  &:active,
+  &:active:focus {
+    outline: none;
+    @include box-shadow(none);
+  }
+  
+  &.btn-success,
+  &.btn-info,
+  &.btn-warning,
+  &.btn-primary,
+  &.btn-danger {
+    .ink {
+      background: rgba(255,255,255,.3);
+    }
+  }
+    
+  &:hover {
+    &:not(.btn-link) {
+      box-shadow:rgba(0, 0, 0, 0.3) 0 2px 5px 0;
+    }
+  }
+  
+  &.btn-link {
+    &:focus,
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  }
+}
+
+.ink {
+  display: block; 
+  position: absolute;
+  background: rgba(0,0,0,.3);
+  @include border-radius (100%);
+  @include transform (scale(0));
+  &.animate {
+    @include animation(ripple 0.3s linear);
+  }
+}
+
+
+@include keyframes(ripple){
+  100% {
+    @include transparent; 
+    @include transform ( scale(2.5) );
+  }  
+}
+
+
+.form-group {
+  &.has-label {
+  position: relative;
+  margin-top: 10px;
+  > label {
+    position: absolute;
+    top: 7px;
+    margin: 0;
+    left: $input-horizontal-padding;
+    font-weight: normal;
+    color: $default-input-color;
+    @include single-transition(all, .2s, ease);
+    @include transform ( scale(1) );
+  }
+  > .form-control {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
+    @include border-radius(0);
+    @include box-shadow(none);
+    border-width: 0 0 1px 0;
+    &:focus {
+      & + label {
+        color: $focused-input-border-color;
+        top: -10px;
+        left: 0;
+        @include transform ( scale(.7) );
+      }
+    }
+  }
+  &.is-filled {
+    label {
+      color: $default-input-color;
+      top: -10px;
+      left: 0;
+      @include transform ( scale(.7) );
+    }
+  }
+  
+  &.has-error,
+  &.has-error.is-filled {
+    .form-control {
+      &:focus {
+        @include box-shadow(none);
+      }
+    }
+    label {
+      color: #a94442;
+    }
+  } 
+  }
+}
+
+.xs-top    { top: $grid-gutter; }
+.xs-right  { right: $grid-gutter; }
+.xs-bottom { bottom: $grid-gutter; }
+.xs-left   { left: $grid-gutter; }
+  
+  .sm-top    { @media (min-width: $screen-sm-min) { top: $grid-gutter; } }
+  .sm-right  { @media (min-width: $screen-sm-min) { right: $grid-gutter; } }
+  .sm-bottom { @media (min-width: $screen-sm-min) { bottom: $grid-gutter; } }
+  .sm-left   { @media (min-width: $screen-sm-min) { left: $grid-gutter; } }
+  
+  .md-top    { @media (min-width: $screen-md-min) { top: $grid-gutter; } }
+  .md-right  { @media (min-width: $screen-md-min) { right: $grid-gutter; } }
+  .md-bottom { @media (min-width: $screen-md-min) { bottom: $grid-gutter; } }
+  .md-left   { @media (min-width: $screen-md-min) { left: $grid-gutter; } }
+  
+  .lg-top    { @media (min-width: $screen-lg-min) { top: $grid-gutter; } }
+  .lg-right  { @media (min-width: $screen-lg-min) { right: $grid-gutter; } }
+  .lg-bottom { @media (min-width: $screen-lg-min) { bottom: $grid-gutter; } }
+  .lg-left   { @media (min-width: $screen-lg-min) { left: $grid-gutter; } }
+
+.alert {
+  &[class*="stickto-"] {
+    margin: 0;
+  }
+  &.stickto-window  { position: fixed; }
+  &.stickto-parent  { position: absolute; }
+  &.alert-sm { @media (min-width: $screen-sm-min) { width: $alert-sm; } }
+  &.alert-md { @media (min-width: $screen-md-min) { width: $alert-md; } }
+  &.alert-lg { @media (min-width: $screen-lg-min) { width: $alert-lg; } }
+}
+.alert-parent { position: relative; }
